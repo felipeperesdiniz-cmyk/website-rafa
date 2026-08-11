@@ -62,7 +62,7 @@ export default function Navigation() {
       >
         <Link
           href="/"
-          className="shrink-0 text-[10px] md:text-xs tracking-[0.35em] uppercase text-foreground/80 hover:text-foreground transition-colors"
+          className="shrink-0 text-xs md:text-sm tracking-[0.3em] uppercase text-foreground/80 hover:text-foreground transition-colors"
           aria-label="Rafael Diniz — Home"
         >
           RD
@@ -73,7 +73,7 @@ export default function Navigation() {
             <li key={link.href} className="shrink-0">
               <Link
                 href={isHome ? link.href.replace("/", "") : link.href}
-                className="whitespace-nowrap text-[10px] md:text-xs tracking-[0.2em] md:tracking-[0.25em] uppercase text-muted hover:text-foreground transition-colors"
+                className="whitespace-nowrap text-xs md:text-sm tracking-[0.18em] md:tracking-[0.22em] uppercase text-muted hover:text-foreground transition-colors"
               >
                 {link.label}
               </Link>

@@ -313,12 +313,16 @@ function ShowreelModal({
 
       <video
         ref={videoRef}
-        className="showreel-modal-video absolute inset-0 w-full h-full bg-black"
-        controls
-        controlsList="nofullscreen noremoteplayback"
-        disablePictureInPicture
+        className="showreel-modal-video absolute inset-0 w-full h-full bg-black cursor-pointer"
         playsInline
         preload="metadata"
+        disablePictureInPicture
+        onClick={() => {
+          const video = videoRef.current;
+          if (!video) return;
+          if (video.paused) video.play().catch(() => {});
+          else video.pause();
+        }}
         onLoadedData={() => setVideoLoaded(true)}
         aria-label={showreelConfig.title}
       >

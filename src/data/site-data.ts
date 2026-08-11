@@ -210,8 +210,8 @@ export const photoSections: PhotoSection[] = [
       "/images/gallery/img-1442.webp",
     ],
     photos: [
-      { id: "pd-01", src: "/images/gallery/imgl-2017.webp", alt: "UF graduate celebrating with champagne at the campus arch", objectPosition: "50% 40%", width: 2400, height: 3598, layout: "tall" },
-      { id: "pd-02", src: "/images/gallery/imgl-1995.webp", alt: "Graduate portrait in golden hour light", objectPosition: "50% 45%", width: 2400, height: 3088, layout: "full" },
+      { id: "pd-01", src: "/images/gallery/imgl-2017.webp", alt: "UF graduate celebrating with champagne at the campus arch", objectPosition: "50% 22%", width: 2400, height: 3598, layout: "tall" },
+      { id: "pd-02", src: "/images/gallery/imgl-1995.webp", alt: "Graduate portrait in golden hour light", objectPosition: "50% 28%", width: 2400, height: 3088, layout: "tall" },
       { id: "pd-03", src: "/images/gallery/img-1442.webp", alt: "Candid portrait with natural light and editorial composition", objectPosition: "50% 45%", width: 2700, height: 2000, layout: "standard" },
     ],
   },

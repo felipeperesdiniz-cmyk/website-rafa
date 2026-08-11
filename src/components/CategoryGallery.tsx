@@ -15,8 +15,8 @@ interface CategoryGalleryProps {
 const layoutGrid: Record<GalleryLayout, string> = {
   standard: "col-span-12 sm:col-span-6 md:col-span-6 min-h-[260px] md:min-h-[320px]",
   wide: "col-span-12 md:col-span-8 min-h-[220px] md:min-h-[360px]",
-  tall: "col-span-12 sm:col-span-6 md:col-span-4 md:row-span-2 min-h-[360px] md:min-h-[520px]",
-  full: "col-span-12 min-h-[300px] md:min-h-[480px]",
+  tall: "col-span-12 sm:col-span-6 md:col-span-4 md:row-span-2 min-h-[420px] md:min-h-[640px]",
+  full: "col-span-12 min-h-[300px] md:min-h-[480px] md:max-h-[72vh]",
   float:
     "col-span-12 sm:col-span-8 sm:col-start-3 md:col-span-5 md:col-start-8 min-h-[280px] md:min-h-[380px]",
 };

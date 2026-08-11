@@ -117,28 +117,28 @@ export default function About() {
 
         <div
           ref={textRef}
-          className="w-full md:w-[38%] md:max-w-sm md:pt-2 relative z-0"
+          className="w-full md:w-[42%] md:max-w-lg md:pt-4 relative z-0"
         >
-          <p className="text-[10px] tracking-[0.45em] uppercase text-muted mb-5">
+          <p className="text-[10px] md:text-xs tracking-[0.45em] uppercase text-muted mb-6 md:mb-8">
             About
           </p>
 
-          <div className="space-y-4">
+          <div className="space-y-5 md:space-y-6">
             {aboutContent.paragraphs.map((paragraph) => (
               <p
                 key={paragraph.slice(0, 40)}
-                className="text-sm md:text-base font-light leading-relaxed text-foreground/70"
+                className="font-serif text-lg md:text-xl lg:text-2xl font-light leading-relaxed text-foreground/88"
               >
                 {paragraph}
               </p>
             ))}
           </div>
 
-          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
+          <ul className="mt-10 md:mt-12 flex flex-wrap gap-x-8 gap-y-4">
             {aboutContent.disciplines.map((discipline) => (
               <li
                 key={discipline}
-                className="text-[9px] tracking-[0.28em] uppercase text-muted/80 border-l border-foreground/15 pl-2.5"
+                className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-muted border-l border-foreground/25 pl-3"
               >
                 {discipline}
               </li>
