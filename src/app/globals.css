@@ -1,0 +1,83 @@
+@import "lenis/dist/lenis.css";
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  --background: #050505;
+  --foreground: #f2f0ea;
+  --muted: #8a8580;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+}
+
+html.scroll-locked,
+body.scroll-locked {
+  overflow: hidden !important;
+}
+
+::selection {
+  background: rgba(242, 240, 234, 0.15);
+  color: var(--foreground);
+}
+
+:focus-visible {
+  outline: 1px solid rgba(242, 240, 234, 0.5);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.showreel-modal {
+  transition: opacity 0.35s ease;
+}
+
+.showreel-modal-video {
+  object-fit: contain;
+  transition: opacity 0.35s ease;
+}
+
+.showreel-modal:fullscreen,
+.showreel-modal:-webkit-full-screen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  background: #000;
+}
+
+.showreel-modal:fullscreen .showreel-modal-video,
+.showreel-modal:-webkit-full-screen .showreel-modal-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  background: #000;
+}
