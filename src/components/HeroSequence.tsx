@@ -120,25 +120,25 @@ export default function HeroSequence() {
 
       <div
         ref={titleRef}
-        className="absolute bottom-16 md:bottom-20 left-6 md:left-10 z-10"
+        className="absolute bottom-24 sm:bottom-20 md:bottom-20 left-6 md:left-10 z-10 max-w-[80%]"
       >
         <h1 className="text-[clamp(1.5rem,4vw,3rem)] tracking-[0.2em] uppercase font-light">
           {siteConfig.name}
         </h1>
-        <p className="mt-2 text-[10px] md:text-xs tracking-[0.35em] uppercase text-muted">
+        <p className="mt-2 text-xs md:text-sm tracking-[0.3em] uppercase text-muted">
           {siteConfig.tagline}
         </p>
       </div>
 
       <div
         ref={scrollRef}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 opacity-0 flex flex-col items-center gap-2"
+        className="absolute bottom-5 right-6 md:bottom-6 md:left-1/2 md:-translate-x-1/2 md:right-auto z-10 opacity-0 flex flex-col items-center gap-2"
         aria-hidden="true"
       >
         <span className="text-[9px] tracking-[0.3em] uppercase text-muted">
           Explore
         </span>
-        <div className="w-px h-6 bg-muted/40" />
+        <div className="w-px h-6 bg-muted/50" />
       </div>
     </section>
   );

@@ -49,7 +49,7 @@ export default function PhotographyGallery() {
     <section
       id="photography"
       ref={sectionRef}
-      className="scroll-mt-24 py-16 md:py-24 px-6 md:px-10 border-t border-border/30"
+      className="scroll-mt-24 py-12 md:py-16 px-6 md:px-10 border-t border-border/30"
       aria-label="Photography"
     >
       <p

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import PortfolioImage from "@/components/PortfolioImage";
-import type { GalleryLayout, GalleryPhoto } from "@/data/site-data";
+import type { GalleryPhoto } from "@/data/site-data";
 import { lockPageScroll, unlockPageScroll } from "@/lib/scroll";
 import { ModalCloseButton, ModalControlBar } from "@/components/ModalControls";
 
@@ -12,23 +12,9 @@ interface CategoryGalleryProps {
   clean?: boolean;
 }
 
-const layoutGrid: Record<GalleryLayout, string> = {
-  standard: "col-span-12 sm:col-span-6 md:col-span-6 min-h-[260px] md:min-h-[320px]",
-  wide: "col-span-12 md:col-span-8 min-h-[220px] md:min-h-[360px]",
-  tall: "col-span-12 sm:col-span-6 md:col-span-4 md:row-span-2 min-h-[420px] md:min-h-[640px]",
-  full: "col-span-12 min-h-[300px] md:min-h-[480px] md:max-h-[72vh]",
-  float:
-    "col-span-12 sm:col-span-8 sm:col-start-3 md:col-span-5 md:col-start-8 min-h-[280px] md:min-h-[380px]",
-};
-
-function getLayoutClass(layout?: GalleryLayout): string {
-  return layoutGrid[layout ?? "standard"];
-}
-
 export default function CategoryGallery({
   photos,
   title,
-  clean = false,
 }: CategoryGalleryProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -63,38 +49,33 @@ export default function CategoryGallery({
 
   return (
     <>
-      <div
-        className={
-          clean
-            ? "grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 max-w-[1080px] mx-auto"
-            : "grid grid-cols-12 gap-3 md:gap-4 max-w-[1440px] mx-auto auto-rows-auto"
-        }
-      >
-        {photos.map((photo, index) => (
-          <button
-            key={photo.id}
-            type="button"
-            onClick={() => open(index)}
-            className={
-              clean
-                ? "group relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden bg-surface focus-visible:outline focus-visible:outline-1 focus-visible:outline-foreground/50"
-                : `group relative overflow-hidden bg-surface focus-visible:outline focus-visible:outline-1 focus-visible:outline-foreground/50 ${getLayoutClass(photo.layout)}`
-            }
-            aria-label={`View ${photo.alt}`}
-          >
-            <PortfolioImage
-              src={photo.src}
-              alt={photo.alt}
-              fill
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-              style={{ objectPosition: photo.objectPosition }}
-              sizes={clean ? "(max-width: 768px) 50vw, 33vw" : "(max-width: 640px) 100vw, 50vw"}
-              loading="lazy"
-              fallbackVariant="tile"
-            />
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500" />
-          </button>
-        ))}
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-3 md:gap-4 max-w-[1440px] mx-auto">
+        {photos.map((photo, index) => {
+          const ratio = photo.width / Math.max(photo.height, 1);
+
+          return (
+            <button
+              key={photo.id}
+              type="button"
+              onClick={() => open(index)}
+              className="group relative mb-3 md:mb-4 w-full break-inside-avoid overflow-hidden bg-surface focus-visible:outline focus-visible:outline-1 focus-visible:outline-foreground/50"
+              style={{ aspectRatio: String(ratio) }}
+              aria-label={`View ${photo.alt}`}
+            >
+              <PortfolioImage
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                style={{ objectPosition: photo.objectPosition }}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                loading="lazy"
+                fallbackVariant="tile"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-500" />
+            </button>
+          );
+        })}
       </div>
 
       {active && activeIndex !== null && (
@@ -148,7 +129,7 @@ export default function CategoryGallery({
           </button>
 
           <div
-            className="relative w-full max-w-[1400px] mx-4 md:mx-8 h-[70vh]"
+            className="relative w-full max-w-[1400px] mx-4 md:mx-8 h-[70vh] md:h-[80vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <PortfolioImage

@@ -172,12 +172,8 @@ export default function Showreel({ compact = false }: ShowreelProps) {
       ref={triggerRef}
       type="button"
       onClick={openModal}
-      className="group relative w-full cursor-pointer focus-visible:outline focus-visible:outline-1 focus-visible:outline-foreground/50"
+      className="group relative w-full max-w-[min(100%,56rem)] cursor-pointer focus-visible:outline focus-visible:outline-1 focus-visible:outline-foreground/50 aspect-video"
       aria-label="Play showreel"
-      style={{
-        width: "min(100vw - 3rem, 90rem, calc((100svh - 8rem) * 16 / 9))",
-        aspectRatio: "16 / 9",
-      }}
     >
       <div
         ref={posterRef}
@@ -188,29 +184,27 @@ export default function Showreel({ compact = false }: ShowreelProps) {
           alt="Showreel poster frame"
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-          sizes="(max-width: 768px) 100vw, 1400px"
+          sizes="(max-width: 768px) 100vw, 900px"
           loading="lazy"
           fallbackSrc={showreelConfig.posterFallback}
           fallbackVariant="hero"
         />
-        <div className="absolute inset-0 bg-black/25 group-hover:bg-black/15 transition-colors duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-black/20 group-hover:from-black/45 transition-colors duration-500" />
 
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="flex flex-col items-center gap-3 md:gap-4">
-            <div className="w-14 h-14 md:w-20 md:h-20 rounded-full border border-foreground/30 flex items-center justify-center backdrop-blur-sm bg-black/20 group-hover:border-foreground/60 group-hover:scale-105 transition-all duration-500">
-              <svg
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-4 h-4 md:w-6 md:h-6 ml-0.5 text-foreground"
-                aria-hidden="true"
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </div>
-            <span className="text-[10px] tracking-[0.3em] uppercase text-foreground/70">
-              Play Showreel
-            </span>
+        <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-3 pb-6 md:pb-8 pointer-events-none">
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-foreground/35 flex items-center justify-center backdrop-blur-sm bg-black/35 group-hover:border-foreground/60 group-hover:scale-105 transition-all duration-500">
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-4 h-4 md:w-5 md:h-5 ml-0.5 text-foreground"
+              aria-hidden="true"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
           </div>
+          <span className="text-[10px] tracking-[0.3em] uppercase text-foreground/80">
+            Play Showreel
+          </span>
         </div>
       </div>
     </button>
@@ -221,8 +215,8 @@ export default function Showreel({ compact = false }: ShowreelProps) {
       <section
         ref={sectionRef}
         id={compact ? undefined : "showreel"}
-        className={`relative flex flex-col items-center justify-center px-6 md:px-10 scroll-mt-24 ${
-          compact ? "pb-12 md:pb-16" : "min-h-screen py-20 md:py-24"
+        className={`relative flex flex-col items-center justify-center px-5 md:px-10 scroll-mt-24 ${
+          compact ? "pb-12 md:pb-16" : "py-14 md:py-20"
         }`}
         aria-label="Showreel"
       >
@@ -289,7 +283,7 @@ function ShowreelModal({
   return (
     <div
       ref={containerRef}
-      className={`showreel-modal fixed inset-0 z-[100] bg-black ${
+      className={`showreel-modal fixed inset-0 z-[100] bg-black flex items-center justify-center ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
       role="dialog"
@@ -311,25 +305,27 @@ function ShowreelModal({
         />
       </ModalControlBar>
 
-      <video
-        ref={videoRef}
-        className="showreel-modal-video absolute inset-0 w-full h-full bg-black cursor-pointer"
-        playsInline
-        preload="metadata"
-        disablePictureInPicture
-        onClick={() => {
-          const video = videoRef.current;
-          if (!video) return;
-          if (video.paused) video.play().catch(() => {});
-          else video.pause();
-        }}
-        onLoadedData={() => setVideoLoaded(true)}
-        aria-label={showreelConfig.title}
-      >
-        {showreelConfig.sources.map((source) => (
-          <source key={source.src} src={source.src} type={source.type} />
-        ))}
-      </video>
+      <div className="relative w-full h-full max-h-[100dvh] flex items-center justify-center px-0 sm:px-4">
+        <video
+          ref={videoRef}
+          className="showreel-modal-video w-full h-auto max-h-[100dvh] bg-black cursor-pointer"
+          playsInline
+          preload="metadata"
+          disablePictureInPicture
+          onClick={() => {
+            const video = videoRef.current;
+            if (!video) return;
+            if (video.paused) video.play().catch(() => {});
+            else video.pause();
+          }}
+          onLoadedData={() => setVideoLoaded(true)}
+          aria-label={showreelConfig.title}
+        >
+          {showreelConfig.sources.map((source) => (
+            <source key={source.src} src={source.src} type={source.type} />
+          ))}
+        </video>
+      </div>
     </div>
   );
 }

@@ -108,7 +108,7 @@ export default function FilmProject({ project, compact = false }: FilmProjectPro
     <>
       <section
         ref={sectionRef}
-        className={compact ? "relative" : `relative py-section px-6 md:px-10 ${isDrift ? "md:pr-[8%]" : ""}`}
+        className={compact ? "relative" : `relative py-10 md:py-14 px-6 md:px-10 ${isDrift ? "md:pr-[8%]" : ""}`}
         aria-label={project.title || `Film Project ${project.number}`}
       >
         <div
@@ -135,12 +135,50 @@ export default function FilmProject({ project, compact = false }: FilmProjectPro
             )}
             {project.description && (
               <p
-                className={`mt-4 max-w-lg text-sm md:text-base font-light leading-relaxed text-foreground/65 ${
+                className={`mt-4 max-w-lg text-sm md:text-base font-light leading-relaxed text-foreground/70 ${
                   !compact && isDrift ? "md:ml-auto" : ""
                 }`}
               >
                 {project.description}
               </p>
+            )}
+            {(project.brief || project.approach || project.outcome) && (
+              <dl
+                className={`mt-6 space-y-4 max-w-lg text-left ${
+                  !compact && isDrift ? "md:ml-auto md:text-right" : ""
+                }`}
+              >
+                {project.brief && (
+                  <div>
+                    <dt className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">
+                      Brief
+                    </dt>
+                    <dd className="text-sm font-light leading-relaxed text-foreground/65">
+                      {project.brief}
+                    </dd>
+                  </div>
+                )}
+                {project.approach && (
+                  <div>
+                    <dt className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">
+                      Approach
+                    </dt>
+                    <dd className="text-sm font-light leading-relaxed text-foreground/65">
+                      {project.approach}
+                    </dd>
+                  </div>
+                )}
+                {project.outcome && (
+                  <div>
+                    <dt className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">
+                      Outcome
+                    </dt>
+                    <dd className="text-sm font-light leading-relaxed text-foreground/65">
+                      {project.outcome}
+                    </dd>
+                  </div>
+                )}
+              </dl>
             )}
           </div>
 

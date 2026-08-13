@@ -32,6 +32,9 @@ export interface VideoProject {
   year?: string;
   role?: string;
   description?: string | null;
+  brief?: string | null;
+  approach?: string | null;
+  outcome?: string | null;
   poster: string | null;
   videoSrc: string | null;
   youtubeId?: string | null;
@@ -92,7 +95,13 @@ export const videoProjects: VideoProject[] = [
     year: "2024",
     role: "Director · Camera",
     description:
-      "An institutional film for B2B Ranch — grounded in landscape, rhythm, and the quiet discipline of ranch life. Shot to feel intimate and cinematic, not corporate.",
+      "An institutional film for B2B Ranch — grounded in landscape, rhythm, and the quiet discipline of ranch life.",
+    brief:
+      "Translate a working ranch into a brand film that feels intimate and cinematic — never corporate brochure.",
+    approach:
+      "Observational camera language, natural light, and paced editing that lets landscape and labor speak before voiceover.",
+    outcome:
+      "A piece that positions B2B Ranch with visual authority while staying true to the place and the people who work it.",
     poster: null,
     videoSrc: null,
     youtubeId: "4IPh_fbGn5g",
@@ -105,7 +114,13 @@ export const videoProjects: VideoProject[] = [
     year: "2023",
     role: "Director · Editor",
     description:
-      "A short documentary on passion worn into the body — the calloused hands, repetition, and devotion behind Brazilian folk wrestling.",
+      "A short documentary on passion worn into the body — calloused hands, repetition, and devotion behind Brazilian folk wrestling.",
+    brief:
+      "Document a culture of discipline without exoticizing it — show the work, the ritual, and the cost of devotion.",
+    approach:
+      "Close observational shooting, restrained score, and an edit that follows physical rhythm rather than exposition.",
+    outcome:
+      "A short that holds as both cultural document and cinematic portrait — built to travel beyond a single festival screening.",
     poster: null,
     videoSrc: null,
     youtubeId: "BNN8BEkgFSk",
@@ -184,7 +199,7 @@ export const photoSections: PhotoSection[] = [
       { id: "ta-04", src: "/images/gallery/IMG_1651.webp", alt: "Gondola on a Venetian canal", objectPosition: "40% 50%", width: 2700, height: 1860, layout: "full" },
       { id: "ta-05", src: "/images/gallery/img-5244.webp", alt: "Couple in a cathedral aisle lit by stained-glass light", objectPosition: "50% 55%", width: 2700, height: 3565, layout: "tall" },
       { id: "ta-06", src: "/images/gallery/img-1630.webp", alt: "Ceramic plates on a shop wall with a blurred passerby", objectPosition: "50% 45%", width: 2700, height: 1754, layout: "wide" },
-      { id: "ta-07", src: "/images/gallery/55007365.webp", alt: "Feet dangling over a sunlit cliff against cyan sky", objectPosition: "50% 30%", width: 1790, height: 2700, layout: "float" },
+      { id: "ta-07", src: "/images/gallery/55007365.webp", alt: "Feet dangling over a sunlit cliff against cyan sky", objectPosition: "50% 45%", width: 2700, height: 1790, layout: "wide" },
       { id: "ta-08", src: "/images/gallery/leading-lines.webp", alt: "Vertical long-exposure traffic light trails at night", objectPosition: "50% 50%", width: 2700, height: 2058, layout: "tall" },
       { id: "ta-09", src: "/images/gallery/img-3242.webp", alt: "Colorful light trails sweeping through a city street at night", objectPosition: "50% 50%", width: 2700, height: 1800, layout: "wide" },
       { id: "ta-10", src: "/images/gallery/img-5536.webp", alt: "Parisian fountain with children, classical architecture behind", objectPosition: "50% 45%", width: 2700, height: 3600, layout: "standard" },
@@ -264,8 +279,8 @@ export const galleryPhotos: GalleryPhoto[] = (() => {
 
 export const aboutContent = {
   paragraphs: [
-    "Photographer and filmmaker from Rio de Janeiro, based in Gainesville, Florida. His work spans still photography, live sports broadcast, and narrative film.",
-    "From Florida Gators athletics on ESPN to feature productions — the camera has been a constant. Discipline shaped by martial arts runs through everything he makes.",
+    "Photographer and filmmaker from Rio de Janeiro, based in Gainesville, Florida. His work spans still photography, live sports broadcast, and narrative film — shaped by nearly six years moving between two cultures.",
+    "From Florida Gators athletics on ESPN networks to feature productions, the camera has been a constant. Discipline from martial arts — jiu-jitsu, judo, and coaching — runs through how he works and what he chooses to frame.",
   ],
   disciplines: ["Photography", "Film", "Documentary", "Sports", "Wildlife"],
   portraits: {

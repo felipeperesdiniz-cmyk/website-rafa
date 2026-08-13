@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { finaleCopy, contactLinks, siteConfig } from "@/data/site-data";
@@ -11,6 +11,10 @@ export default function Finale() {
   const sectionRef = useRef<HTMLElement>(null);
   const linesRef = useRef<HTMLDivElement>(null);
   const linksRef = useRef<HTMLDivElement>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -88,10 +92,23 @@ export default function Finale() {
     return () => mm.revert();
   }, []);
 
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const subject = encodeURIComponent(
+      `Inquiry from ${name.trim() || "website visitor"}`
+    );
+    const body = encodeURIComponent(
+      `Name: ${name.trim()}\nEmail: ${email.trim()}\n\n${message.trim()}`
+    );
+    window.location.href = `mailto:${siteConfig.email}?subject=${subject}&body=${body}`;
+    setSubmitted(true);
+  };
+
   return (
     <section
       ref={sectionRef}
-      className="relative scroll-mt-24 min-h-[40vh] flex flex-col justify-center py-16 md:py-24 px-6 md:px-10"
+      id="contact"
+      className="relative scroll-mt-24 min-h-[40vh] flex flex-col justify-center py-16 md:py-24 px-6 md:px-10 border-t border-border/30"
       aria-label="Contact"
     >
       <div ref={linesRef} className="max-w-[900px]">
@@ -105,41 +122,97 @@ export default function Finale() {
         ))}
       </div>
 
-      <div className="mt-14 md:mt-20">
-        <a
-          href={`mailto:${siteConfig.email}`}
-          className="group inline-flex flex-col gap-3"
-        >
-          <span className="text-[10px] tracking-[0.35em] uppercase text-muted group-hover:text-foreground/80 transition-colors">
-            Start a conversation
-          </span>
-          <span className="font-serif text-2xl md:text-4xl font-light text-foreground/90 group-hover:text-foreground transition-colors">
-            {siteConfig.email}
-          </span>
-        </a>
+      <div className="mt-12 md:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 max-w-[1100px]">
+        <div>
+          <a
+            href={`mailto:${siteConfig.email}`}
+            className="group inline-flex flex-col gap-3"
+          >
+            <span className="text-[10px] tracking-[0.35em] uppercase text-muted group-hover:text-foreground/80 transition-colors">
+              Email directly
+            </span>
+            <span className="font-serif text-xl md:text-3xl font-light text-foreground/90 group-hover:text-foreground transition-colors break-all">
+              {siteConfig.email}
+            </span>
+          </a>
+
+          {contactLinks.length > 0 && (
+            <div ref={linksRef} className="mt-10 flex flex-wrap gap-8">
+              {contactLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors"
+                  target={link.href.startsWith("http") ? "_blank" : undefined}
+                  rel={
+                    link.href.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-5" noValidate>
+          <p className="text-[10px] tracking-[0.35em] uppercase text-muted mb-2">
+            Or send a note
+          </p>
+          <label className="block">
+            <span className="sr-only">Name</span>
+            <input
+              type="text"
+              name="name"
+              autoComplete="name"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-transparent border-b border-border/60 py-3 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground/40 transition-colors"
+              required
+            />
+          </label>
+          <label className="block">
+            <span className="sr-only">Email</span>
+            <input
+              type="email"
+              name="email"
+              autoComplete="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-transparent border-b border-border/60 py-3 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground/40 transition-colors"
+              required
+            />
+          </label>
+          <label className="block">
+            <span className="sr-only">Message</span>
+            <textarea
+              name="message"
+              rows={4}
+              placeholder="What are you looking to create?"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full bg-transparent border-b border-border/60 py-3 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground/40 transition-colors resize-none"
+              required
+            />
+          </label>
+          <button
+            type="submit"
+            className="mt-2 text-[10px] tracking-[0.35em] uppercase text-foreground/80 hover:text-foreground border border-foreground/25 px-5 py-3 transition-colors"
+          >
+            {submitted ? "Opening mail…" : "Send inquiry"}
+          </button>
+          <p className="text-[10px] text-muted/70 leading-relaxed">
+            Opens your email app with this note ready to send. Prefer a call?
+            Include that in your message.
+          </p>
+        </form>
       </div>
 
-      {contactLinks.length > 0 && (
-        <div ref={linksRef} className="mt-10 md:mt-12 flex flex-wrap gap-8">
-          {contactLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors"
-              target={link.href.startsWith("http") ? "_blank" : undefined}
-              rel={
-                link.href.startsWith("http")
-                  ? "noopener noreferrer"
-                  : undefined
-              }
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-      )}
-
-      <div className="h-[6vh]" aria-hidden="true" />
+      <div className="h-[4vh]" aria-hidden="true" />
     </section>
   );
 }
