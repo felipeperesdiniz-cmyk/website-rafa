@@ -85,7 +85,11 @@ export function ModalControlBar({
 
   return (
     <div
-      className={`absolute z-[110] flex items-center gap-1 rounded-full bg-black/35 backdrop-blur-md px-1 py-1 ${modalControlPositionClass(isMobile)} ${className}`}
+      // A live backdrop-filter over a playing video drops frames on iOS, so
+      // phones get a flat scrim instead.
+      className={`absolute z-[110] flex items-center gap-1 rounded-full px-1 py-1 ${
+        isMobile ? "bg-black/55" : "bg-black/35 backdrop-blur-md"
+      } ${modalControlPositionClass(isMobile)} ${className}`}
     >
       {children}
     </div>

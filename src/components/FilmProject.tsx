@@ -21,7 +21,7 @@ interface FilmProjectProps {
 export default function FilmProject({ project, compact = false }: FilmProjectProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const frameRef = useRef<HTMLButtonElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const posterSrc =
     project.poster || youtubeThumbnail(project.youtubeId!, "maxres");
@@ -116,71 +116,36 @@ export default function FilmProject({ project, compact = false }: FilmProjectPro
             !compact && isDrift ? "md:ml-auto md:mr-0" : "mx-auto"
           }`}
         >
-          <div
+          <p
             ref={textRef}
-            className={`mb-6 md:mb-8 ${!compact && isDrift ? "md:text-right" : ""}`}
+            className={`mb-6 md:mb-8 text-sm md:text-[15px] font-light leading-relaxed text-foreground/72 max-w-3xl ${
+              !compact && isDrift ? "md:ml-auto md:text-right" : ""
+            }`}
           >
             <span className="text-[10px] tracking-[0.35em] uppercase text-muted">
               {project.number}
             </span>
             {project.title && (
-              <h3 className="mt-2 font-serif text-2xl md:text-4xl font-light tracking-tight">
-                {project.title}
-              </h3>
+              <>
+                {" · "}
+                <span className="text-foreground/88">{project.title}</span>
+              </>
             )}
-            {(project.year || project.role) && (
-              <p className="mt-3 text-[10px] tracking-[0.3em] uppercase text-muted/80">
-                {[project.year, project.role].filter(Boolean).join(" · ")}
-              </p>
+            {project.role && (
+              <>
+                {" · "}
+                <span className="text-[10px] tracking-[0.25em] uppercase text-muted/85">
+                  {project.role}
+                </span>
+              </>
             )}
-            {project.description && (
-              <p
-                className={`mt-4 max-w-lg text-sm md:text-base font-light leading-relaxed text-foreground/70 ${
-                  !compact && isDrift ? "md:ml-auto" : ""
-                }`}
-              >
-                {project.description}
-              </p>
+            {project.summary && (
+              <>
+                {" — "}
+                {project.summary}
+              </>
             )}
-            {(project.brief || project.approach || project.outcome) && (
-              <dl
-                className={`mt-6 space-y-4 max-w-lg text-left ${
-                  !compact && isDrift ? "md:ml-auto md:text-right" : ""
-                }`}
-              >
-                {project.brief && (
-                  <div>
-                    <dt className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">
-                      Brief
-                    </dt>
-                    <dd className="text-sm font-light leading-relaxed text-foreground/65">
-                      {project.brief}
-                    </dd>
-                  </div>
-                )}
-                {project.approach && (
-                  <div>
-                    <dt className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">
-                      Approach
-                    </dt>
-                    <dd className="text-sm font-light leading-relaxed text-foreground/65">
-                      {project.approach}
-                    </dd>
-                  </div>
-                )}
-                {project.outcome && (
-                  <div>
-                    <dt className="text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">
-                      Outcome
-                    </dt>
-                    <dd className="text-sm font-light leading-relaxed text-foreground/65">
-                      {project.outcome}
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            )}
-          </div>
+          </p>
 
           <button
             ref={frameRef}

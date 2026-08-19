@@ -67,7 +67,7 @@ export default function About() {
     };
   }, []);
 
-  const { primary, secondary } = aboutContent.portraits;
+  const { portrait } = aboutContent;
 
   return (
     <section
@@ -78,40 +78,21 @@ export default function About() {
     >
       <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row md:items-start gap-10 md:gap-16">
         <div ref={portraitRef} className="w-full md:w-[56%] shrink-0 relative z-0">
-          <div className="relative pb-10 md:pb-12">
-            <div
-              className="relative w-full overflow-hidden bg-surface"
-              style={{ aspectRatio: "3 / 4" }}
-            >
-              <PortfolioImage
-                src={primary.src}
-                alt={primary.alt}
-                fill
-                className="object-cover"
-                style={{
-                  objectPosition: primary.objectPosition,
-                  transform: "scale(1.05)",
-                }}
-                sizes="(max-width: 768px) 100vw, 56vw"
-              />
-            </div>
-
-            <div
-              className="absolute bottom-0 right-0 w-[52%] overflow-hidden border border-foreground/15 bg-surface shadow-[0_24px_64px_rgba(0,0,0,0.45)] z-10"
-              style={{ aspectRatio: "4 / 3" }}
-            >
-              <PortfolioImage
-                src={secondary.src}
-                alt={secondary.alt}
-                fill
-                className="object-cover"
-                style={{
-                  objectPosition: secondary.objectPosition,
-                  transform: "scale(1.08)",
-                }}
-                sizes="(max-width: 768px) 50vw, 30vw"
-              />
-            </div>
+          <div
+            className="relative w-full overflow-hidden bg-surface"
+            style={{ aspectRatio: "3 / 4" }}
+          >
+            <PortfolioImage
+              src={portrait.src}
+              alt={portrait.alt}
+              fill
+              className="object-cover"
+              style={{
+                objectPosition: portrait.objectPosition,
+                transform: "scale(1.05)",
+              }}
+              sizes="(max-width: 768px) 100vw, 56vw"
+            />
           </div>
         </div>
 

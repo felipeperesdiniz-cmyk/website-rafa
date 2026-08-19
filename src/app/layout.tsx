@@ -31,15 +31,27 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    email: siteConfig.email,
+    jobTitle: "Photographer & Filmmaker",
+    description: siteConfig.description,
+    sameAs: [
+      "https://www.instagram.com/rafaeldiniz",
+      "https://www.youtube.com/@rafaeldiniz",
+    ],
+  };
+
   return (
     <html lang="en" className={`${fontSans.variable} ${fontSerif.variable}`}>
       <head>
         <link rel="preload" as="image" href="/images/hero-poster.webp" />
-        <link
-          rel="preload"
-          as="video"
-          href="/videos/hero.mp4"
-          type="video/mp4"
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body className="font-sans antialiased">{children}</body>

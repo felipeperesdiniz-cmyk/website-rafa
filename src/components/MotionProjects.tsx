@@ -11,7 +11,7 @@ export default function MotionProjects() {
   }, []);
 
   return (
-    <section id="work" className="scroll-mt-24" aria-label="Film projects">
+    <section aria-label="Film projects">
       <div className="px-6 md:px-10 pt-8 md:pt-12 pb-6 md:pb-8">
         <p className="text-[10px] tracking-[0.4em] uppercase text-muted">
           Selected Projects

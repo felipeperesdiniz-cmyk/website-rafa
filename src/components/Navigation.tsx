@@ -6,9 +6,10 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 
 const navLinks = [
-  { label: "Work", href: "/#showreel", id: "showreel" },
+  { label: "Work", href: "/#work", id: "work" },
   { label: "Photography", href: "/#photography", id: "photography" },
   { label: "About", href: "/#about", id: "about" },
+  { label: "Contact", href: "/#contact", id: "contact" },
 ];
 
 export default function Navigation() {

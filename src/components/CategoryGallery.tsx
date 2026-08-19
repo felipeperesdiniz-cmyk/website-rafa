@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import PortfolioImage from "@/components/PortfolioImage";
 import type { GalleryPhoto } from "@/data/site-data";
 import { lockPageScroll, unlockPageScroll } from "@/lib/scroll";
@@ -17,14 +17,15 @@ export default function CategoryGallery({
   title,
 }: CategoryGalleryProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const savedScroll = useRef(0);
 
   const close = useCallback(() => {
-    if (activeIndex !== null) unlockPageScroll();
+    if (activeIndex !== null) unlockPageScroll(savedScroll.current);
     setActiveIndex(null);
   }, [activeIndex]);
 
   const open = useCallback((index: number) => {
-    lockPageScroll();
+    savedScroll.current = lockPageScroll();
     setActiveIndex(index);
   }, []);
 

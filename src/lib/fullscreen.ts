@@ -9,6 +9,32 @@ type FullscreenElement = HTMLElement & {
   msRequestFullscreen?: () => Promise<void>;
 };
 
+type WebkitVideoElement = HTMLVideoElement & {
+  webkitEnterFullscreen?: () => void;
+  webkitSupportsFullscreen?: boolean;
+};
+
+export function supportsElementFullscreen(element: HTMLElement | null): boolean {
+  if (!element) return false;
+  const el = element as FullscreenElement;
+  return Boolean(
+    el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen
+  );
+}
+
+/**
+ * iPhone Safari has no element fullscreen — only the video's own native
+ * fullscreen presentation.
+ */
+export function enterVideoFullscreen(video: HTMLVideoElement | null): boolean {
+  const el = video as WebkitVideoElement | null;
+  if (!el?.webkitEnterFullscreen || el.webkitSupportsFullscreen === false) {
+    return false;
+  }
+  el.webkitEnterFullscreen();
+  return true;
+}
+
 export function getFullscreenElement(): Element | null {
   const doc = document as FullscreenDocument;
   return doc.fullscreenElement ?? doc.webkitFullscreenElement ?? null;

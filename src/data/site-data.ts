@@ -29,12 +29,8 @@ export interface VideoProject {
   number: string;
   title: string | null;
   status?: string;
-  year?: string;
   role?: string;
-  description?: string | null;
-  brief?: string | null;
-  approach?: string | null;
-  outcome?: string | null;
+  summary?: string;
   poster: string | null;
   videoSrc: string | null;
   youtubeId?: string | null;
@@ -62,6 +58,8 @@ export const heroConfig = {
   video: "/videos/hero.mp4",
   poster: "/images/hero-poster.webp",
   objectPosition: "50% 50%",
+  blurDataURL:
+    "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAADwAgCdASoYAA4APzmGuVOvKSWisAgB4CcJZQC+SC0kAAD+7d1TCAZ/Ay4pUqn4AAA=",
 };
 
 export const motionSection = {
@@ -81,8 +79,15 @@ export const showreelConfig = {
     { src: "/videos/showreel-web.mp4", type: "video/mp4" },
     { src: "/videos/showreel.mp4", type: "video/mp4" },
   ],
+  // 720p / ~1.7 Mbps cut so phones and metered connections can keep the buffer ahead.
+  lightSources: [
+    { src: "/videos/showreel-mobile.mp4", type: "video/mp4" },
+    { src: "/videos/showreel-web.mp4", type: "video/mp4" },
+  ],
   poster: "/images/showreel-poster.webp",
   posterFallback: "/images/showreel-poster.jpg",
+  blurDataURL:
+    "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADwAgCdASoYAA4APzmGulQ+qSWjMAgD0CcJYgCw7C5JAAD+6/YyJdb/N1o4mf1keWOMEKVMuDqHeR4Bg8YAAA==",
   title: "Rafael Diniz Showreel",
   phrase: "MOTION / STILLNESS / STORY",
 };
@@ -92,16 +97,9 @@ export const videoProjects: VideoProject[] = [
     id: "film-project-01",
     number: "01",
     title: "B2B Ranch — Institucional",
-    year: "2024",
-    role: "Director · Camera",
-    description:
-      "An institutional film for B2B Ranch — grounded in landscape, rhythm, and the quiet discipline of ranch life.",
-    brief:
-      "Translate a working ranch into a brand film that feels intimate and cinematic — never corporate brochure.",
-    approach:
-      "Observational camera language, natural light, and paced editing that lets landscape and labor speak before voiceover.",
-    outcome:
-      "A piece that positions B2B Ranch with visual authority while staying true to the place and the people who work it.",
+    role: "Director",
+    summary:
+      "Institutional brand film grounded in landscape, rhythm, and the quiet discipline of ranch life.",
     poster: null,
     videoSrc: null,
     youtubeId: "4IPh_fbGn5g",
@@ -111,16 +109,9 @@ export const videoProjects: VideoProject[] = [
     id: "film-project-02",
     number: "02",
     title: "Paixão Calejada",
-    year: "2023",
-    role: "Director · Editor",
-    description:
-      "A short documentary on passion worn into the body — calloused hands, repetition, and devotion behind Brazilian folk wrestling.",
-    brief:
-      "Document a culture of discipline without exoticizing it — show the work, the ritual, and the cost of devotion.",
-    approach:
-      "Close observational shooting, restrained score, and an edit that follows physical rhythm rather than exposition.",
-    outcome:
-      "A short that holds as both cultural document and cinematic portrait — built to travel beyond a single festival screening.",
+    role: "Director",
+    summary:
+      "Short documentary on devotion, repetition, and the cost of Brazilian folk wrestling.",
     poster: null,
     videoSrc: null,
     youtubeId: "BNN8BEkgFSk",
@@ -283,17 +274,10 @@ export const aboutContent = {
     "From Florida Gators athletics on ESPN networks to feature productions, the camera has been a constant. Discipline from martial arts — jiu-jitsu, judo, and coaching — runs through how he works and what he chooses to frame.",
   ],
   disciplines: ["Photography", "Film", "Documentary", "Sports", "Wildlife"],
-  portraits: {
-    primary: {
-      src: "/images/about/rafael-filmmaker.webp",
-      alt: "Rafael Diniz operating a cinema camera on a gimbal stabilizer",
-      objectPosition: "50% 22%",
-    },
-    secondary: {
-      src: "/images/about/rafael-bjj.webp",
-      alt: "Athlete training in a martial arts gym, photographed in black and white",
-      objectPosition: "50% 30%",
-    },
+  portrait: {
+    src: "/images/about/rafael-filmmaker.webp",
+    alt: "Rafael Diniz operating a cinema camera on a gimbal stabilizer",
+    objectPosition: "50% 22%",
   },
 };
 

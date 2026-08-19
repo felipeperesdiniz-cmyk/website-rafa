@@ -11,6 +11,9 @@ export default function HeroSequence() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [motionEnabled, setMotionEnabled] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [videoPreload, setVideoPreload] = useState<"auto" | "metadata">(
+    "metadata"
+  );
 
   useEffect(() => {
     const title = titleRef.current;
@@ -20,6 +23,9 @@ export default function HeroSequence() {
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+    setVideoPreload(isMobile ? "metadata" : "auto");
 
     if (!prefersReduced) {
       setMotionEnabled(true);
@@ -86,6 +92,8 @@ export default function HeroSequence() {
           alt=""
           fill
           priority
+          placeholder="blur"
+          blurDataURL={heroConfig.blurDataURL}
           className="object-cover"
           style={{ objectPosition: heroConfig.objectPosition }}
           sizes="100vw"
@@ -102,7 +110,7 @@ export default function HeroSequence() {
             muted
             loop
             playsInline
-            preload="auto"
+            preload={videoPreload}
             poster={heroConfig.poster}
             aria-hidden="true"
             onCanPlay={(e) => {
