@@ -4,6 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const navLinks = [
   { label: "Work", href: "/#work", id: "work" },
@@ -14,44 +17,42 @@ const navLinks = [
 
 export default function Navigation() {
   const navRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(true);
-  const [scrolled, setScrolled] = useState(false);
+  const navBgRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const lastScroll = useRef(0);
+  const line1Ref = useRef<HTMLSpanElement>(null);
+  const line2Ref = useRef<HTMLSpanElement>(null);
+  const line3Ref = useRef<HTMLSpanElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   useEffect(() => {
-    const nav = navRef.current;
-    if (!nav) return;
+    const navBg = navBgRef.current;
+    if (!navBg) return;
 
-    gsap.fromTo(
-      nav,
-      { y: -20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1.2, delay: 0.3, ease: "power3.out" }
-    );
+    const hero = document.querySelector("section[aria-label='Introduction']");
+    if (!hero) return;
 
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 48);
-      if (!menuOpen) {
-        if (y > lastScroll.current + 10 && y > 200) {
-          setVisible(false);
-        } else if (y < lastScroll.current - 10) {
-          setVisible(true);
-        }
-      } else {
-        setVisible(true);
-      }
-      lastScroll.current = y;
-    };
+    const trigger = ScrollTrigger.create({
+      trigger: hero,
+      start: "bottom top",
+      onEnter: () =>
+        gsap.to(navBg, {
+          backgroundColor: "rgba(0,0,0,0.75)",
+          duration: 0.5,
+        }),
+      onLeaveBack: () =>
+        gsap.to(navBg, {
+          backgroundColor: "rgba(0,0,0,0.4)",
+          duration: 0.5,
+        }),
+    });
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [menuOpen]);
+    return () => trigger.kill();
+  }, []);
 
   useEffect(() => {
     if (!isHome) return;
@@ -64,80 +65,86 @@ export default function Navigation() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const visibleEntries = entries
-          .filter((entry) => entry.isIntersecting)
+        const visible = entries
+          .filter((e) => e.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visibleEntries[0]?.target.id) {
-          setActiveId(visibleEntries[0].target.id);
+        if (visible[0]?.target.id) {
+          setActiveId(visible[0].target.id);
         }
       },
-      {
-        rootMargin: "-35% 0px -45% 0px",
-        threshold: [0.1, 0.25, 0.5],
-      }
+      { rootMargin: "-35% 0px -45% 0px", threshold: [0.1, 0.25, 0.5] }
     );
 
-    sections.forEach((section) => observer.observe(section));
+    sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
   }, [isHome]);
+
+  useEffect(() => {
+    const l1 = line1Ref.current;
+    const l2 = line2Ref.current;
+    const l3 = line3Ref.current;
+    const drawer = drawerRef.current;
+    if (!l1 || !l2 || !l3) return;
+
+    if (menuOpen) {
+      gsap.to(l1, { rotation: 45, y: 6, duration: 0.3 });
+      gsap.to(l2, { opacity: 0, duration: 0.2 });
+      gsap.to(l3, { rotation: -45, y: -6, duration: 0.3 });
+      if (drawer) {
+        gsap.fromTo(drawer, { x: "100%" }, { x: "0%", duration: 0.5, ease: "power3.out" });
+        const links = drawer.querySelectorAll("a");
+        gsap.fromTo(links, { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.1, delay: 0.2, duration: 0.4 });
+      }
+      document.body.style.overflow = "hidden";
+    } else {
+      gsap.to(l1, { rotation: 0, y: 0, duration: 0.3 });
+      gsap.to(l2, { opacity: 1, duration: 0.2 });
+      gsap.to(l3, { rotation: 0, y: 0, duration: 0.3 });
+      document.body.style.overflow = "";
+    }
+  }, [menuOpen]);
 
   useEffect(() => {
     if (!menuOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeMenu();
     };
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen, closeMenu]);
 
   const linkClass = (id: string) =>
-    `whitespace-nowrap text-xs md:text-sm tracking-[0.18em] md:tracking-[0.22em] uppercase transition-colors ${
-      activeId === id
-        ? "text-foreground"
-        : "text-muted hover:text-foreground"
+    `nav-link label-caps-sm transition-opacity duration-300 ${
+      activeId === id ? "opacity-100" : "opacity-[0.45] hover:opacity-100"
     }`;
 
   return (
-    <header
-      ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        visible || menuOpen
-          ? "translate-y-0 opacity-100"
-          : "-translate-y-full opacity-0"
-      }`}
-      role="banner"
-    >
+    <header ref={navRef} className="fixed left-0 right-0 top-0 z-50" role="banner">
+      <div
+        ref={navBgRef}
+        className="absolute inset-0 backdrop-blur-[12px]"
+        style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
+        aria-hidden="true"
+      />
       <nav
-        className={`flex items-center justify-between px-6 md:px-10 py-5 md:py-6 transition-all duration-500 ${
-          isHome && !scrolled && !menuOpen
-            ? "bg-transparent"
-            : "bg-background/92 backdrop-blur-md border-b border-border/20"
-        }`}
+        className="relative flex items-center justify-between px-[5vw] py-5 md:py-6"
         aria-label="Main navigation"
       >
         <Link
           href="/"
           onClick={closeMenu}
-          className="shrink-0 text-xs md:text-sm tracking-[0.3em] uppercase text-foreground/90 hover:text-foreground transition-colors"
+          className="label-caps-sm shrink-0 text-[13px] tracking-[0.2em] text-[var(--text-secondary)] opacity-70 transition-opacity hover:opacity-100"
           aria-label="Rafael Diniz — Home"
         >
           RD
         </Link>
 
-        <ul className="hidden md:flex items-center gap-8 lg:gap-10 shrink-0">
+        <ul className="hidden items-center gap-8 md:flex lg:gap-10">
           {navLinks.map((link) => (
-            <li key={link.href} className="shrink-0">
+            <li key={link.href}>
               <Link
                 href={isHome ? link.href.replace("/", "") : link.href}
-                className={`${linkClass(link.id)} ${
-                  activeId === link.id
-                    ? "underline underline-offset-8 decoration-foreground/40"
-                    : ""
-                }`}
+                className={linkClass(link.id)}
               >
                 {link.label}
               </Link>
@@ -147,51 +154,42 @@ export default function Navigation() {
 
         <button
           type="button"
-          className="md:hidden relative z-[60] w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+          className="relative z-[60] flex h-10 w-10 flex-col items-center justify-center gap-[5px] md:hidden"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
+          onClick={() => setMenuOpen((o) => !o)}
         >
-          <span
-            className={`block w-5 h-px bg-foreground transition-transform duration-300 ${
-              menuOpen ? "translate-y-[3.5px] rotate-45" : ""
-            }`}
-          />
-          <span
-            className={`block w-5 h-px bg-foreground transition-opacity duration-300 ${
-              menuOpen ? "opacity-0" : "opacity-100"
-            }`}
-          />
-          <span
-            className={`block w-5 h-px bg-foreground transition-transform duration-300 ${
-              menuOpen ? "-translate-y-[3.5px] -rotate-45" : ""
-            }`}
-          />
+          <span ref={line1Ref} className="block h-px w-[18px] bg-white" />
+          <span ref={line2Ref} className="block h-px w-[18px] bg-white" />
+          <span ref={line3Ref} className="block h-px w-[18px] bg-white" />
         </button>
       </nav>
 
-      {menuOpen && (
-        <div
-          className="md:hidden fixed inset-0 z-40 bg-background/96 backdrop-blur-md pt-24 px-8"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Mobile navigation"
-        >
-          <ul className="flex flex-col gap-8">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={isHome ? link.href.replace("/", "") : link.href}
-                  onClick={closeMenu}
-                  className={`text-2xl tracking-[0.2em] uppercase font-light ${linkClass(link.id)}`}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div
+        ref={drawerRef}
+        className={`fixed inset-0 z-40 bg-[var(--bg)] pt-24 px-8 md:hidden ${
+          menuOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+        style={{ transform: "translateX(100%)" }}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!menuOpen}
+        aria-label="Mobile navigation"
+      >
+        <ul className="flex flex-col gap-8">
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={isHome ? link.href.replace("/", "") : link.href}
+                onClick={closeMenu}
+                className="font-serif text-[2rem] font-light text-[var(--text-primary)]"
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </header>
   );
 }

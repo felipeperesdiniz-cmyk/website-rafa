@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { fontSans, fontSerif } from "@/lib/fonts";
 import { siteConfig } from "@/data/site-data";
+import CursorProvider from "@/components/CursorProvider";
+import TransitionLayout from "@/components/TransitionLayout";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -48,13 +50,22 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fontSans.variable} ${fontSerif.variable}`}>
       <head>
-        <link rel="preload" as="image" href="/images/hero-poster.webp" />
+        <link
+          rel="preload"
+          href="/videos/hero.mp4"
+          as="video"
+          type="video/mp4"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <CursorProvider>
+          <TransitionLayout>{children}</TransitionLayout>
+        </CursorProvider>
+      </body>
     </html>
   );
 }

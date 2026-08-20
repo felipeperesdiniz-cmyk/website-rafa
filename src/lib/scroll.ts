@@ -61,13 +61,12 @@ export function useSmoothScroll() {
       const prefersReduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
       ).matches;
-      const isMobile = window.matchMedia("(max-width: 767px)").matches;
-      if (prefersReduced || isMobile) return;
+      if (prefersReduced) return;
 
       const LenisClass = (await import("lenis")).default;
       lenis = new LenisClass({
-        duration: 1.2,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        lerp: 0.08,
+        duration: 1.4,
         smoothWheel: true,
       });
 

@@ -1,21 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import FilmProject from "@/components/FilmProject";
 import { videoProjects } from "@/data/site-data";
 
 export default function MotionProjects() {
-  useEffect(() => {
-    requestAnimationFrame(() => ScrollTrigger.refresh());
-  }, []);
-
   return (
-    <section aria-label="Film projects">
-      <div className="px-6 md:px-10 pt-8 md:pt-12 pb-6 md:pb-8">
-        <p className="text-[10px] tracking-[0.4em] uppercase text-muted">
-          Selected Projects
+    <section aria-label="Selected work">
+      <div className="px-[5vw] pb-8 pt-4">
+        <p className="label-caps-sm text-[var(--text-secondary)] opacity-40">
+          SELECTED WORK
         </p>
+        <div className="mt-4 h-px w-full bg-white opacity-[0.12]" />
       </div>
 
       {videoProjects.map((project) => (

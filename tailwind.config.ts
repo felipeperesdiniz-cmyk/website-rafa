@@ -5,15 +5,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#050505",
-        foreground: "#F2F0EA",
-        muted: "#B0AAA2",
-        surface: "#0E0E0E",
-        border: "#1A1A1A",
+        background: "#0a0a0a",
+        foreground: "rgba(255,255,255,0.92)",
+        muted: "rgba(255,255,255,0.45)",
+        surface: "#111111",
+        border: "rgba(255,255,255,0.1)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        serif: ["var(--font-serif)", "Georgia", "serif"],
+        sans: ["var(--font-sans)", "Inter", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "Cormorant Garamond", "Georgia", "serif"],
       },
       spacing: {
         section: "clamp(6rem, 15vh, 12rem)",

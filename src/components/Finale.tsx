@@ -7,160 +7,128 @@ import { finaleCopy, contactLinks, siteConfig } from "@/data/site-data";
 
 gsap.registerPlugin(ScrollTrigger);
 
+type FormStatus = "idle" | "sending" | "sent" | "error";
+
 export default function Finale() {
   const sectionRef = useRef<HTMLElement>(null);
-  const linesRef = useRef<HTMLDivElement>(null);
-  const linksRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<FormStatus>("idle");
+
+  const words = finaleCopy.headline.split(" ");
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const lines = linesRef.current;
-    const links = linksRef.current;
-    if (!section || !lines) return;
+    const headline = headlineRef.current;
+    if (!headline) return;
 
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
     if (prefersReduced) return;
 
-    const lineEls = lines.querySelectorAll(".finale-line");
-
-    const mm = gsap.matchMedia();
-
-    mm.add("(min-width: 768px)", () => {
-      lineEls.forEach((line, i) => {
-        gsap.fromTo(
-          line,
-          { y: 40 },
-          {
-            y: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: line,
-              start: "top 88%",
-              once: true,
-            },
-            delay: i * 0.12,
-          }
-        );
-      });
-    });
-
-    mm.add("(max-width: 767px)", () => {
+    const wordEls = headline.querySelectorAll(".word-reveal");
+    wordEls.forEach((word, i) => {
       gsap.fromTo(
-        lineEls,
-        { y: 24 },
+        word,
+        { clipPath: "inset(0 0 100% 0)" },
         {
-          y: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power2.out",
+          clipPath: "inset(0 0 0% 0)",
+          duration: 0.6,
+          delay: i * 0.08,
+          ease: "power3.out",
           scrollTrigger: {
-            trigger: lines,
-            start: "top 90%",
+            trigger: headline,
+            start: "top 80%",
             once: true,
           },
         }
       );
     });
-
-    if (links) {
-      gsap.fromTo(
-        links,
-        { y: 12 },
-        {
-          y: 0,
-          duration: 0.8,
-          delay: 0.2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: links,
-            start: "top 92%",
-            once: true,
-          },
-        }
-      );
-    }
-
-    ScrollTrigger.refresh();
-
-    return () => mm.revert();
   }, []);
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(
-      `Inquiry from ${name.trim() || "website visitor"}`
-    );
-    const body = encodeURIComponent(
-      `Name: ${name.trim()}\nEmail: ${email.trim()}\n\n${message.trim()}`
-    );
-    window.location.href = `mailto:${siteConfig.email}?subject=${subject}&body=${body}`;
-    setSubmitted(true);
+    setStatus("sending");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      if (!res.ok) throw new Error("Failed");
+      setStatus("sent");
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    gsap.to(e.target, {
+      borderColor: "rgba(255,255,255,1)",
+      duration: 0.3,
+    });
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    gsap.to(e.target, {
+      borderColor: "rgba(255,255,255,0.2)",
+      duration: 0.3,
+    });
   };
 
   return (
     <section
       ref={sectionRef}
       id="contact"
-      className="relative scroll-mt-24 min-h-[40vh] flex flex-col justify-center py-16 md:py-24 px-6 md:px-10 border-t border-border/30"
+      className="relative flex min-h-[100dvh] scroll-mt-24 flex-col justify-center px-[5vw] py-20 md:py-28"
       aria-label="Contact"
     >
-      <div ref={linesRef} className="max-w-[900px]">
-        {finaleCopy.lines.map((line, i) => (
-          <p
-            key={i}
-            className="finale-line font-serif text-[clamp(2rem,6vw,5rem)] font-light leading-[1.1] tracking-[-0.01em]"
-          >
-            {line}
-          </p>
+      <h2
+        ref={headlineRef}
+        className="max-w-5xl font-serif text-[clamp(2.5rem,7vw,7vw)] font-light leading-[1.05] text-[var(--text-primary)]"
+      >
+        {words.map((word, i) => (
+          <span key={i} className="word-reveal inline-block" style={{ clipPath: "inset(0 0 100% 0)" }}>
+            {word}{" "}
+          </span>
         ))}
-      </div>
+      </h2>
 
-      <div className="mt-12 md:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 max-w-[1100px]">
+      <div className="mt-16 grid max-w-[1100px] grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-20">
         <div>
+          <p className="label-caps mb-4 text-[var(--text-secondary)] opacity-40">
+            EMAIL DIRECTLY
+          </p>
           <a
             href={`mailto:${siteConfig.email}`}
-            className="group inline-flex flex-col gap-3"
+            className="text-[1.1rem] text-[var(--text-primary)] transition-opacity hover:opacity-70"
           >
-            <span className="text-[10px] tracking-[0.35em] uppercase text-muted group-hover:text-foreground/80 transition-colors">
-              Email directly
-            </span>
-            <span className="font-serif text-xl md:text-3xl font-light text-foreground/90 group-hover:text-foreground transition-colors break-all">
-              {siteConfig.email}
-            </span>
+            {siteConfig.email}
           </a>
 
-          {contactLinks.length > 0 && (
-            <div ref={linksRef} className="mt-10 flex flex-wrap gap-8">
-              {contactLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors"
-                  target={link.href.startsWith("http") ? "_blank" : undefined}
-                  rel={
-                    link.href.startsWith("http")
-                      ? "noopener noreferrer"
-                      : undefined
-                  }
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          )}
+          <div className="mt-10 flex flex-wrap gap-6">
+            {contactLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="label-caps text-[var(--text-secondary)] transition-all hover:text-[var(--text-primary)] hover:underline"
+              >
+                {link.label.toUpperCase()}
+              </a>
+            ))}
+          </div>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-5" noValidate>
-          <p className="text-[10px] tracking-[0.35em] uppercase text-muted mb-2">
-            Or send a note
-          </p>
+        <form onSubmit={onSubmit} className="space-y-6" noValidate>
           <label className="block">
             <span className="sr-only">Name</span>
             <input
@@ -170,7 +138,9 @@ export default function Finale() {
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-transparent border-b border-border/60 py-3 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground/40 transition-colors"
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              className="w-full border-b border-white/20 bg-transparent py-3 text-[0.9rem] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none"
               required
             />
           </label>
@@ -183,7 +153,9 @@ export default function Finale() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-transparent border-b border-border/60 py-3 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground/40 transition-colors"
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              className="w-full border-b border-white/20 bg-transparent py-3 text-[0.9rem] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none"
               required
             />
           </label>
@@ -195,24 +167,27 @@ export default function Finale() {
               placeholder="What are you looking to create?"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full bg-transparent border-b border-border/60 py-3 text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground/40 transition-colors resize-none"
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              className="w-full resize-none border-b border-white/20 bg-transparent py-3 text-[0.9rem] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none"
               required
             />
           </label>
           <button
             type="submit"
-            className="mt-2 text-[10px] tracking-[0.35em] uppercase text-foreground/80 hover:text-foreground border border-foreground/25 px-5 py-3 transition-colors"
+            disabled={status === "sending" || status === "sent"}
+            className="group w-full bg-white py-[14px] text-[11px] tracking-[0.2em] text-black transition-all duration-300 hover:bg-transparent hover:text-white disabled:opacity-60"
           >
-            {submitted ? "Opening mail…" : "Send inquiry"}
+            {status === "sending"
+              ? "SENDING…"
+              : status === "sent"
+                ? "SENT. ✓"
+                : status === "error"
+                  ? "FAILED — TRY AGAIN"
+                  : "SUBMIT"}
           </button>
-          <p className="text-[10px] text-muted/70 leading-relaxed">
-            Opens your email app with this note ready to send. Prefer a call?
-            Include that in your message.
-          </p>
         </form>
       </div>
-
-      <div className="h-[4vh]" aria-hidden="true" />
     </section>
   );
 }
